@@ -6,14 +6,11 @@
     "inlineSourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outFile": "build/output.js",
+    "outDir": "build",
     "declaration": false
   },
-  "exclude": [
-    "node_modules",
-    "coverage",
-    "build",
-    "scripts",
-    "typings"
+  "files": [
+    "fuse/index.ts",
+    "test/index.ts"
   ]
 }

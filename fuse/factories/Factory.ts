@@ -7,5 +7,5 @@ export interface ConstructorArgs<T> {
 }
 
 export interface Factory<T> {
-	build<A extends ConstructorArgs<T>>(constructorArgs?: A): T;
+	build(...constructorArgs: any[]): T;
 }

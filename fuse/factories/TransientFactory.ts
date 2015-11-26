@@ -8,11 +8,7 @@ export class TransientFactory<T> implements Factory<T> {
 		this._instanceConstructor = instanceConstructor;
 	}
 
-	public build<A extends ConstructorArgs<T>>(constructorArgs?: A): T {
-		var args: any[] = [];
-		if (constructorArgs) {
-			args = constructorArgs.getArgs();
-		}
-		return new this._instanceConstructor(...args);
+	public build(...constructorArgs: any[]): T {
+		return new this._instanceConstructor(...constructorArgs);
 	}
 }

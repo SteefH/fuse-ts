@@ -7,7 +7,7 @@ var child_process = require('child_process');
 
 function runIt() {
   console.log(Date(), "running");
-  var command = "node_modules/.bin/mocha && node_modules/.bin/tsc && node_modules/.bin/istanbul cover --report text node_modules/.bin/_mocha -- --recursive build/test/index.js"; 
+  var command = "rm -rf build coverage && node_modules/.bin/tsc && node_modules/.bin/istanbul cover --report text --print detail -i 'build/**/*.js' --include-all-sources node_modules/.bin/_mocha -- build/test/index.js"; 
   try {
 
     child_process.execSync(command, {

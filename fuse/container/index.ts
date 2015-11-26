@@ -1,11 +1,12 @@
 
 import {Factory, SingletonFactory, TransientFactory, Constructor} from '../factories';
 import {Registry} from './Registry';
+export {Constructor} from '../factories';
 
 export interface Binding<T> {
 	asSingleton(): void;
 	asTransient(): void;
-	build(): T;
+	build(...constructorArgs: any[]): T;
 }
 
 
@@ -24,8 +25,8 @@ export class RegistryBinding<T> implements Binding<T> {
 		this._factory = new TransientFactory(this.cons);
 	}
 
-	build(): T {
-		return this._factory.build();
+	build(...constructorArgs: any[]): T {
+		return this._factory.build(...constructorArgs);
 	}
 }
 
@@ -52,10 +53,10 @@ export class Container {
 	public bind<T>(base: Constructor<T>): BindingSubject<T> {
 		return new Subject<T>(this._registry, base);
 	}
-	public build<T>(c: Constructor<T>): T {
+	public build<T>(c: Constructor<T>, ...constructorArgs: any[]): T {
 		var binding: Binding<T> = this._registry.get(c);
 		if (binding) {
-			return binding.build();
+			return binding.build(...constructorArgs);
 		}
 		return null;
 	}
