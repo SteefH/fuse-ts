@@ -1,1 +1,0 @@
-export function Fused(): void {};
