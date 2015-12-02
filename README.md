@@ -34,10 +34,9 @@ var isServiceImplementation: boolean = serviceConsumer.service instanceof Servic
 As you can see in the example, the `ServiceConsumer` constructor has one
 optional argument of the type `Service`. Upon creating an instance by using
 `new ServiceConsumer()`, _fuse_ will for each constructor argument look for a
-type that has been "fused" to the type of that argument, and pass an instance.
-In the example that's
-`ServiceImplementation` for the first (and only) argument of the constructor.
-This is made possible by using the `@fused` decorator on the `ServiceConsumer`
-class.
+type that has been "fused" to the type of that argument, inject an instance in
+the constructor. So, in the example, a `ServiceImplementation` instance is
+injected in the `ServiceConsumer` constructor. This is made possible by the
+`@fused` decorator on the `ServiceConsumer` class.
 
 _...work in progress..._
