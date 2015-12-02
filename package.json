@@ -17,10 +17,10 @@
     "node-watch": "^0.3.4",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
-    "ts-node": "^0.5.3",
-    "typescript": "^1.6.2"
+    "ts-node": "^0.5.3"
   },
   "dependencies": {
+    "typescript": "^1.6.2",
     "reflect-metadata": "^0.1.2"
   },
   "repository": {
