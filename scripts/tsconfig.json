@@ -6,10 +6,11 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "dist",
+    "outDir": "../build",
     "declaration": true
   },
   "files": [
-    "fuse/index.ts"
+    "../fuse/index.ts",
+    "../test/index.ts"
   ]
 }
