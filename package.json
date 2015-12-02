@@ -1,20 +1,19 @@
 {
-  "name": "fuse.ts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "fuse-ts",
+  "version": "0.0.1",
+  "description": "Dependency injection for TypeScript",
+  "main": "dist/fuse/index.js",
   "scripts": {
     "test": "node node_modules/.bin/mocha",
     "dev": "node scripts/dev.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Stefan van der Haven",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^3.4.1",
     "istanbul": "gotwarlost/istanbul#source-map",
     "mocha": "^2.3.4",
     "node-watch": "^0.3.4",
-    "reflect-metadata": "^0.1.2",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "ts-node": "^0.5.3",
@@ -22,5 +21,9 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SteefH/fuse-ts"
   }
 }

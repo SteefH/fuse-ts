@@ -10,8 +10,8 @@ export interface Binding<T> {
 }
 
 class RegistryBinding<T> implements Binding<T>, Factory<T> {
-	
-	private factory: Factory<T>; 
+
+	private factory: Factory<T>;
 
 	constructor(private constructor: Constructor<T>) {
 		this.factory = new TransientFactory(constructor);
@@ -25,8 +25,8 @@ class RegistryBinding<T> implements Binding<T>, Factory<T> {
 		this.factory = new TransientFactory(this.constructor);
 	}
 
-	build(): T {
-		return this.factory.build();
+	build(...constructorArguments: any[]): T {
+		return this.factory.build(...constructorArguments);
 	}
 }
 
@@ -66,10 +66,10 @@ export class Container {
 	public bind<T>(baseConstructor: Constructor<T>): BindingSubject<T> {
 		return new Subject<T>(this.registry, baseConstructor);
 	}
-	public build<T>(baseConstructor: Constructor<T>): T {
+	public build<T>(baseConstructor: Constructor<T>, ...constructorArguments: any[]): T {
 		var binding: Factory<T> = this.registry.get(baseConstructor);
 		if (binding) {
-			return binding.build();
+			return binding.build(...constructorArguments);
 		}
 	}
 
@@ -83,15 +83,14 @@ export class Container {
 		var findFactories = this.findFactories.bind(this);
 
 		return function <T>(targetClass: Constructor<T>): any {
-			console.log(Reflect.getMetadata("design:type", targetClass));
 			var argumentTypes: any[] = Reflect.getMetadata("design:paramtypes", targetClass);
-			function newConstructor() {
+			function newConstructor(): void {
 				var originalArguments = [].slice.call(arguments);
 				var remainingArgumentTypes = argumentTypes.slice(originalArguments.length);
 				var injectedArguments: any[] = findFactories(remainingArgumentTypes).map(
 					(factory: Factory<any>) => factory && factory.build()
 				);
-				targetClass.call(this, ...[].slice.call(originalArguments), ...injectedArguments);
+				targetClass.call(this, ...originalArguments, ...injectedArguments);
 			}
 			newConstructor.prototype.constructor = targetClass;
 			return newConstructor;

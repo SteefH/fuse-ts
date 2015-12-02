@@ -3,12 +3,11 @@
     "target": "es5",
     "module": "commonjs",
     "noImplicitAny": true,
-    "inlineSourceMap": true,
+    "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "build",
-    "outFile": "build/output.js",
-    "declaration": false
+    "outDir": "dist",
+    "declaration": true
   },
   "files": [
     "fuse/index.ts",

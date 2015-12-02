@@ -11,16 +11,16 @@ interface RegisteredConstructor {
 export class Registry {
 	private constructors: ConstructorMapping = {};
 	private static nextFuseId: number = 0;
-	add<T>(baseCons: Constructor<T>, registree: Factory<any>): Factory<any> {
+	add<T>(baseCons: Constructor<T>, factory: Factory<any>): Factory<any> {
 		var registeredConstructor = (baseCons as RegisteredConstructor);
 		if (!registeredConstructor.__registrationId) {
 			registeredConstructor.__registrationId = `$fused-${Registry.nextFuseId}`;
 			Registry.nextFuseId += 1;
 		}
-		this.constructors[registeredConstructor.__registrationId] = registree;
-		return registree;
+		this.constructors[registeredConstructor.__registrationId] = factory;
+		return factory;
 	}
-	
+
 	public get<T>(baseCons: Constructor<T>): Factory<any> {
 		var registeredConstructor = (baseCons as RegisteredConstructor);
 		return this.constructors[registeredConstructor.__registrationId];

@@ -9,7 +9,7 @@ export var fused: <T>(ctor: Constructor<T>) => Constructor<T> = container.create
 export interface Fuse {
 	<T>(baseConstructor: Constructor<T>): BindingSubject<T>;
 	reset(): void;
-	build<T>(baseConstructor: Constructor<T>): T;
+	build<T>(baseConstructor: Constructor<T>, ...constructorArguments: any[]): T;
 }
 
 export var fuse: Fuse = <Fuse>function fuse<T>(baseConstructor: Constructor<T>): BindingSubject<T> {
@@ -20,9 +20,6 @@ fuse.reset = function (): void {
 	container.reset();
 }
 
-fuse.build = function<T>(baseConstructor: Constructor<T>): T {
-	return container.build(baseConstructor);
+fuse.build = function<T>(baseConstructor: Constructor<T>, ...constructorArguments: any[]): T {
+	return container.build(baseConstructor, ...constructorArguments);
 }
-
-
-

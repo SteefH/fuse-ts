@@ -3,25 +3,25 @@ export interface Constructor<T> {
 }
 
 export interface Factory<T> {
-	build(): T;
+	build(...constructorArguments: any[]): T;
 }
 
 export class TransientFactory<T> implements Factory<T> {
 
 	constructor(private instanceConstructor: Constructor<T>) { }
 
-	public build(): T {
-		return new this.instanceConstructor();
+	public build(...constructorArguments: any[]): T {
+		return new this.instanceConstructor(...constructorArguments);
 	}
 }
 
 export class SingletonFactory<T> extends TransientFactory<T> {
 	private instance: T = undefined;
 
-	public build(): T {
+	public build(...constructorArguments: any[]): T {
 		if (this.instance === undefined) {
-			this.instance = super.build();
+			this.instance = super.build(...constructorArguments);
 		}
 		return this.instance;
 	}
-} 
+}
