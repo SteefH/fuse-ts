@@ -11,11 +11,11 @@ chai.use(sinonChai);
 
 import {fuse, fused} from '../fuse';
 
-beforeEach(() => {
-	fuse.reset();
-});
 
 describe('fuse', () => {
+	beforeEach(() => {
+		fuse.reset();
+	});
 	class Foo {
 		method(): void { };
 	}
@@ -111,16 +111,24 @@ describe('fuse', () => {
 
 describe('fused-decorated class', () => {
 
-	class Service {
-		serviceMethod() { };
+	class TransientService {
+		serviceMethod(): void { };
 	};
 
-	class ServiceImplementation implements Service {
-		serviceMethod() { };
+	class TransientServiceImplementation implements TransientService {
+		serviceMethod(): void { };
 	};
+
+	class SingletonService {
+		singletonServiceMethod(): void { }
+	}
+
+	class SingletonServiceImplementation implements SingletonService {
+		singletonServiceMethod(): void {}
+	}
 
 	class Unbound {
-		someMethod() { }
+		someMethod(): void { }
 	}
 	interface Bar {
 		flurp(): void;
@@ -129,99 +137,108 @@ describe('fused-decorated class', () => {
 	@fused
 	class ServiceConsumer {
 		constructor(
-			public service?: Service,
-			public service2?: Service,
+			public transientService?: TransientService,
+			public transientService2?: TransientService,
+			public singletonService?: SingletonService,
+			public singletonService2?: SingletonService,
 			public unbound?: Unbound,
 			public bar?: Bar
 		) { }
 	}
+
+	beforeEach(() => {
+		fuse.reset();
+		fuse(TransientService).to(TransientServiceImplementation).asTransient();
+		fuse(SingletonService).to(SingletonServiceImplementation).asSingleton();
+		fuse(ServiceConsumer).toSelf();
+	});
 	context('when instantiated with fuse.build()', () => {
+		var instance: ServiceConsumer;
 		beforeEach(() => {
-			fuse(Service).to(ServiceImplementation).asSingleton();
-			fuse(ServiceConsumer).toSelf();
+			instance = fuse.build(ServiceConsumer);
 		});
 
-		it('is injected with instances for bound types in its constructor', () => {
-			var instance: ServiceConsumer;
-
-			instance = fuse.build(ServiceConsumer);
-
+		it('is an instance of the right type', () => {
 			expect(instance).to.be.instanceof(ServiceConsumer);
-			expect(instance.service).to.be.instanceof(ServiceImplementation);
-			expect(instance.service2).to.be.instanceof(ServiceImplementation);
-			expect(instance.service).to.equal(instance.service2);
 		});
-		it('is injected with undefined for unbound types in its constructor', () => {
-			var instance: ServiceConsumer;
 
-			instance = fuse.build(ServiceConsumer);
+		it('receives different instances for transient bindings', () => {
+			expect(instance.transientService).to.be.instanceof(TransientServiceImplementation);
+			expect(instance.transientService2).to.be.instanceof(TransientServiceImplementation);
+			expect(instance.transientService).not.to.equal(instance.transientService2);
+		});
 
-			expect(instance).to.be.instanceof(ServiceConsumer);
+		it('receives the same instance for singleton bindings', () => {
+			expect(instance.singletonService).to.be.instanceof(SingletonServiceImplementation);
+			expect(instance.singletonService2).to.be.instanceof(SingletonServiceImplementation);
+			expect(instance.singletonService).to.equal(instance.singletonService2);
+		});
+
+		it('is injected with undefined for unbound types', () => {
 			expect(instance.unbound).to.be.undefined;
 		});
+
 		it('receives positional arguments passed to fuse.build() instead of injected instances', () => {
-			var instance: ServiceConsumer;
-			class OtherServiceImplementation implements Service {
+			class OtherServiceImplementation implements TransientService {
 				serviceMethod() {}
 			}
 
 			instance = fuse.build(ServiceConsumer, new OtherServiceImplementation());
-			expect(instance.service).to.be.instanceof(OtherServiceImplementation);
+			expect(instance.transientService).to.be.instanceof(OtherServiceImplementation);
+			expect(instance.transientService2).to.be.instanceof(TransientServiceImplementation);
 
 			instance = fuse.build(ServiceConsumer, undefined, undefined, undefined, undefined);
-			expect(instance.service).to.be.undefined;
-			expect(instance.service2).to.be.undefined;
+			expect(instance.transientService).to.be.undefined;
+			expect(instance.transientService2).to.be.undefined;
 			expect(instance.unbound).to.be.undefined;
 			expect(instance.bar).to.be.undefined;
-
 		});
 
 	});
 
 	context('when instantiated with new', () => {
+
+		var instance: ServiceConsumer;
 		beforeEach(() => {
-			fuse.reset();
-			fuse(Service).to(ServiceImplementation).asSingleton();
-			fuse(ServiceConsumer).toSelf();
+			instance = new ServiceConsumer();
 		});
 
-		it('is injected with instances for bound types in its constructor', () => {
-			var instance: ServiceConsumer;
-
-			instance = new ServiceConsumer();
-
+		it('is an instance of the right type', () => {
 			expect(instance).to.be.instanceof(ServiceConsumer);
-			expect(instance.service).to.be.instanceof(ServiceImplementation);
-			expect(instance.service2).to.be.instanceof(ServiceImplementation);
-			expect(instance.service).to.equal(instance.service2);
 		});
-		it('is injected with undefined for unbound types in its constructor', () => {
-			var instance: ServiceConsumer;
 
-			instance = new ServiceConsumer();
+		it('receives different instances for transient bindings', () => {
+			expect(instance.transientService).to.be.instanceof(TransientServiceImplementation);
+			expect(instance.transientService2).to.be.instanceof(TransientServiceImplementation);
+			expect(instance.transientService).not.to.equal(instance.transientService2);
+		});
 
-			expect(instance).to.be.instanceof(ServiceConsumer);
+		it('receives the same instance for singleton bindings', () => {
+			expect(instance.singletonService).to.be.instanceof(SingletonServiceImplementation);
+			expect(instance.singletonService2).to.be.instanceof(SingletonServiceImplementation);
+			expect(instance.singletonService).to.equal(instance.singletonService2);
+		});
+
+		it('is injected with undefined for unbound types', () => {
 			expect(instance.unbound).to.be.undefined;
 		});
-		it('receives positional arguments passed to fuse.build() instead of injected instances', () => {
 
-			class OtherServiceImplementation implements Service {
+		it('receives positional arguments passed to the constructor instead of injected instances', () => {
+			class OtherServiceImplementation implements TransientService {
 				serviceMethod() {}
 			}
-			var instance: ServiceConsumer;
 
 			instance = new ServiceConsumer(new OtherServiceImplementation());
+			expect(instance.transientService).to.be.instanceof(OtherServiceImplementation);
+			expect(instance.transientService2).to.be.instanceof(TransientServiceImplementation);
 
-			expect(instance).to.be.instanceof(ServiceConsumer);
-			expect(instance.service).to.be.instanceof(OtherServiceImplementation);
-
-			instance = new ServiceConsumer(undefined, undefined, undefined, undefined);
-
-			expect(instance.service ).to.be.undefined;
-			expect(instance.service2).to.be.undefined;
-			expect(instance.unbound ).to.be.undefined;
-			expect(instance.bar     ).to.be.undefined;
-
+			instance = fuse.build(ServiceConsumer, undefined, undefined, undefined, undefined, undefined, undefined);
+			expect(instance.transientService).to.be.undefined;
+			expect(instance.transientService2).to.be.undefined;
+			expect(instance.singletonService).to.be.undefined;
+			expect(instance.singletonService2).to.be.undefined;
+			expect(instance.unbound).to.be.undefined;
+			expect(instance.bar).to.be.undefined;
 		});
 
 	});
