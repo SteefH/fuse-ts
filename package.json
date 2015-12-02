@@ -5,7 +5,8 @@
   "main": "dist/fuse/index.js",
   "scripts": {
     "test": "node node_modules/.bin/mocha",
-    "dev": "node scripts/dev.js"
+    "dev": "node scripts/dev.js",
+    "postinstall": "node node_modules/typescript/bin/tsc"
   },
   "author": "Stefan van der Haven",
   "license": "MIT",
