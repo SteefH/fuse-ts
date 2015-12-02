@@ -84,7 +84,7 @@ export class Container {
 
 		return function <T>(targetClass: Constructor<T>): any {
 			var argumentTypes: any[] = Reflect.getMetadata("design:paramtypes", targetClass);
-			function newConstructor(): void {
+			function newConstructor(): any {
 				var originalArguments = [].slice.call(arguments);
 				var remainingArgumentTypes = argumentTypes.slice(originalArguments.length);
 				var injectedArguments: any[] = findFactories(remainingArgumentTypes).map(

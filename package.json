@@ -11,9 +11,7 @@
   },
   "author": "Stefan van der Haven",
   "license": "MIT",
-  "typescript": {
-    "definition": "dist/index.d.ts"
-  },
+  "typings": "dist/index.d.ts",
   "devDependencies": {
     "chai": "^3.4.1",
     "istanbul": "gotwarlost/istanbul#source-map",
