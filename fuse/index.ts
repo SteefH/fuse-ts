@@ -4,7 +4,7 @@ import {Container, BindingSubject} from './Container';
 export {BindingSubject} from './Container';
 
 var container = new Container();
-export var fused: <T>(ctor: Constructor<T>) => Constructor<T> = container.createDecorator();
+export var fused: <T>(ctor: Constructor<T>) => any = container.createDecorator();
 
 export interface Fuse {
 	<T>(baseConstructor: Constructor<T>): BindingSubject<T>;
