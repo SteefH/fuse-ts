@@ -6,10 +6,14 @@
   "scripts": {
     "test": "node node_modules/.bin/mocha",
     "dev": "node scripts/dev.js",
+    "preinstall": "npm install typescript",
     "postinstall": "node node_modules/typescript/bin/tsc"
   },
   "author": "Stefan van der Haven",
   "license": "MIT",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
   "devDependencies": {
     "chai": "^3.4.1",
     "istanbul": "gotwarlost/istanbul#source-map",
