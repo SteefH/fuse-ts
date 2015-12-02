@@ -1,5 +1,7 @@
 # fuse-ts #
 
+[![Build Status](https://travis-ci.org/SteefH/fuse-ts.svg?branch=master)](https://travis-ci.org/SteefH/fuse-ts)
+
 *fuse-ts* is a [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) library for
 TypeScript. It allows you to use a `@fused` decorator on your TypeScript classes, so that when an instance
 of that class is constructed, it will receive instances of the types the class depends on.
