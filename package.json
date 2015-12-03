@@ -11,6 +11,15 @@
     "tsconfig.json",
     "tsd.json"
   ],
+  "keywords": [
+    "typescript",
+    "dependecy injection",
+    "dependency",
+    "injection",
+    "di",
+    "inversion of control",
+    "ioc"
+  ],
   "scripts": {
     "test": "node node_modules/.bin/mocha",
     "dev": "node scripts/dev.js",
