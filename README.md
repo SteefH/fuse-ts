@@ -210,3 +210,8 @@ var secondInstance = new ServiceConsumer();
 // The following  will be true
 firstInstance.service === secondInstance.service;
 ```
+
+## Why? ##
+
+This was created as part of a first personal venture into TypeScript, and inspired by the .NET [Ninject](http://ninject.org) DI
+library. Comments and complaints are welcome.
