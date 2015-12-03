@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "description": "Dependency injection for TypeScript",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "fuse",
+    "test",
+    "scripts"
+  ],
   "scripts": {
     "test": "node node_modules/.bin/mocha",
     "dev": "node scripts/dev.js",
-    "preinstall": "npm install typescript",
-    "postinstall": "node node_modules/typescript/bin/tsc"
+    "prepublish": "node node_modules/typescript/bin/tsc"
   },
-  "author": "Stefan van der Haven",
+  "author": {
+    "name": "Stefan van der Haven",
+    "url": "https://github.com/SteefH"
+  },
   "license": "MIT",
   "typings": "dist/index.d.ts",
   "devDependencies": {
@@ -19,7 +27,8 @@
     "node-watch": "^0.3.4",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
-    "ts-node": "^0.5.3"
+    "ts-node": "^0.5.3",
+    "typescript": "^1.7.3"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.2"
