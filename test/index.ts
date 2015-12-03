@@ -134,8 +134,12 @@ describe('fused-decorated class', () => {
 		flurp(): void;
 	}
 
+	class ServiceConsumerBase {
+		public baseMethod() { }
+	}
+
 	@fused
-	class ServiceConsumer {
+	class ServiceConsumer extends ServiceConsumerBase {
 		constructor(
 			public transientService?: TransientService,
 			public transientService2?: TransientService,
@@ -143,7 +147,9 @@ describe('fused-decorated class', () => {
 			public singletonService2?: SingletonService,
 			public unbound?: Unbound,
 			public bar?: Bar
-		) { }
+		) {
+			super();
+		}
 	}
 
 	beforeEach(() => {
@@ -160,6 +166,11 @@ describe('fused-decorated class', () => {
 
 		it('is an instance of the right type', () => {
 			expect(instance).to.be.instanceof(ServiceConsumer);
+		});
+
+		it('still extends its base classes', () => {
+			expect(instance).to.be.instanceof(ServiceConsumerBase);
+			expect(instance).to.respondTo('baseMethod');
 		});
 
 		it('receives different instances for transient bindings', () => {
@@ -205,6 +216,11 @@ describe('fused-decorated class', () => {
 
 		it('is an instance of the right type', () => {
 			expect(instance).to.be.instanceof(ServiceConsumer);
+		});
+
+		it('still extends its base classes', () => {
+			expect(instance).to.be.instanceof(ServiceConsumerBase);
+			expect(instance).to.respondTo('baseMethod');
 		});
 
 		it('receives different instances for transient bindings', () => {

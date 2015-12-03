@@ -92,7 +92,7 @@ export class Container {
 				);
 				targetClass.call(this, ...originalArguments, ...injectedArguments);
 			}
-			newConstructor.prototype.constructor = targetClass;
+			newConstructor.prototype = targetClass.prototype;
 			return newConstructor;
 		}
 	}
