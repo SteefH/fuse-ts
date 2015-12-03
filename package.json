@@ -4,10 +4,12 @@
   "description": "Dependency injection for TypeScript",
   "main": "dist/index.js",
   "files": [
-    "dist",
-    "fuse",
-    "test",
-    "scripts"
+    "dist/",
+    "fuse/",
+    "test/",
+    "scripts/",
+    "tsconfig.json",
+    "tsd.json"
   ],
   "scripts": {
     "test": "node node_modules/.bin/mocha",
