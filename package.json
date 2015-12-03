@@ -1,6 +1,6 @@
 {
   "name": "fuse-ts",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Dependency injection for TypeScript",
   "main": "dist/index.js",
   "scripts": {
@@ -28,5 +28,7 @@
     "type": "git",
     "url": "https://github.com/SteefH/fuse-ts"
   },
-  "engines" : { "node" : ">=0.10" }
+  "engines": {
+    "node": ">=0.10"
+  }
 }
