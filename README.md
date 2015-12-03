@@ -8,7 +8,7 @@ of that class is constructed, it will receive instances of the types the class d
 
 ## Basic example ##
 ```typescript
-import {fuse, fused} from 'fuse';
+import {fuse, fused} from 'fuse-ts';
 
 class Service {
   public someMethod(): void { }
@@ -35,7 +35,7 @@ var isServiceImplementation: boolean = serviceConsumer.service instanceof Servic
 
 As you can see in the example, the `ServiceConsumer` constructor has one
 optional argument of the type `Service`. Upon creating an instance by using
-`new ServiceConsumer()`, _fuse_ will for each constructor argument look for a
+`new ServiceConsumer()`, _fuse-ts_ will for each constructor argument look for a
 type that has been "fused" to the type of that argument, inject an instance in
 the constructor. So, in the example, a `ServiceImplementation` instance is
 injected in the `ServiceConsumer` constructor. This is made possible by the
@@ -43,12 +43,14 @@ injected in the `ServiceConsumer` constructor. This is made possible by the
 
 ### Important ###
 
-To use _fuse-ts_ in your project, make sure you use the following in your _tsconfig.json_ file:
+To use _fuse-ts_ in your project, make sure you use the `--experimentalDecorators` and `--emitDecoratorMetadata` flags when running `tsc`, or use the following in your _tsconfig.json_ file:
 
 ```json
 {
+  ...
   "experimentalDecorators": true,
   "emitDecoratorMetadata": true
+  ...
 }
 ```
 
@@ -56,9 +58,10 @@ To use _fuse-ts_ in your project, make sure you use the following in your _tscon
 
 ### Decorated classes ###
 
-When you decorate a TypeScript class with `@fused`, the class's constructor is wrapped by another function
+When you decorate a TypeScript class with `@fused`, the class's constructor is wrapped by a function
 that resolves values for the original constructor's arguments, based on their type. For convenience, it
-is preferable to make all the constructor's arguments you want injected optional, so you can call the constructor without TypeScript compiler complaints. Like this:
+is preferable to make all the constructor's arguments you want injected optional, so you can call the
+constructor without TypeScript compiler complaints. Like this:
 
 ```typescript
 @fused
@@ -81,7 +84,7 @@ class Component {
   }
 }
 
-// TypeScript compiler will fail on the following line
+// Fails with "Supplied parameters do not match any signature of call target."
 var component = new Component();
 ```
 
@@ -137,4 +140,73 @@ class InjectedFoo implements Foo {
 
 // register with fuse-ts
 fuse(Foo).to(InjectedFoo); // Compilation fails with "Cannot find name 'Foo'"
+```
+
+### Object lifetime ###
+
+#### Transient dependencies ####
+
+When you use `fuse(A).to(B)`, each injected instance of `A` will resolve to a new instance of `B`. This is called a _transient dependency_. This is the default behaviour of _fuse-ts_. To make this explicit in your code, you can use the `asTransient()` method on the result of `fuse(A).to(B)`.
+
+An example:
+
+```typescript
+class Service {
+  public serviceMethod(): void {}
+}
+
+class SingletonServiceImplementation implements Service {
+  public serviceMethod(): void {
+    // stuff
+  }
+}
+
+fuse(Service).to(SingletonServiceImplementation).asTransient();
+
+@fused
+class ServiceConsumer {
+  constructor(public service?: Service) { }
+}
+
+var firstInstance = new ServiceConsumer();
+var secondInstance = new ServiceConsumer();
+
+// The following  will be true
+firstInstance.service !== secondInstance.service;
+```
+
+#### Singletons ###
+
+Sometimes you want a service to be one and the same instance across your whole project, in other words, you
+want it to be a singleton. By default, each time _fuse-ts_ injects a dependency, an new instance of that
+dependency is created. To make _fuse-ts_ inject a singleton, you use the following:
+
+```typescript
+class Service {
+  public serviceMethod(): void {}
+}
+
+class SingletonServiceImplementation implements Service {
+  public serviceMethod(): void {
+    // stuff
+  }
+}
+
+fuse(Service).to(SingletonServiceImplementation).asSingleton();
+```
+
+Now, each time a class that depends on `Service` is instantiated, it will receive the same
+`SingletonServiceImplementation` instance:
+
+```typescript
+@fused
+class ServiceConsumer {
+  constructor(public service?: Service) { }
+}
+
+var firstInstance = new ServiceConsumer();
+var secondInstance = new ServiceConsumer();
+
+// The following  will be true
+firstInstance.service === secondInstance.service;
 ```
